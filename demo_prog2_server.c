@@ -1,6 +1,6 @@
 /* demo_server.c - code for example server program that uses TCP */
 
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -103,6 +103,9 @@ int main(int argc, char **argv) {
 	FD_SET(listenerSDs[1], &active_FD_set);
 
 	/* Main server loop - accept and handle requests */
+	int readers[15];
+	int numreaders = 0;
+	int connections =0;
 	while (1) {
 		read_FD_set = active_FD_set;
       	if (select (FD_SETSIZE, &read_FD_set, NULL, NULL, NULL) < 0) {
@@ -114,15 +117,31 @@ int main(int argc, char **argv) {
 			if( FD_ISSET(i, &read_FD_set)) {
 				if(i == listenerSDs[0]) {
 					//TODO: Accept new reader
-					printf("Detected new reader, Unimplemented.\n");
+					printf("Detected new reader.\n");
+					if ( (listenerSDs[0]=accept(*sd, (struct sockaddr *)&cad, &alen)) < 0) {
+						fprintf(stderr, "Error: Accept failed\n");
+						exit(EXIT_FAILURE);
+					}
+					readers[numreaders] = listenerSDs[0];
+					numreaders++;
 					exit(EXIT_FAILURE);
 				} else if (i == listenerSDs[1]) {
 					//TODO: Accept new writer
-					printf("Detected new writer, Unimplemented.\n");
+					printf("Detected new writer.\n");
+					if ( (listenerSDs[1]=accept(*sd, (struct sockaddr *)&cad, &alen)) < 0) {
+						fprintf(stderr, "Error: Accept failed\n");
+						exit(EXIT_FAILURE);
+					}
+					FD_SET(listenerSDs[1], &active_FD_set);
 					exit(EXIT_FAILURE);
 				} else {
 					//TODO: Handle data from existing connection
 					char buf[1000] = {0}; /* buffer for data */
+					recv(*sd, buf[connections], 1000);
+					for(int i=0; i< numreaders; i++) {
+						send(readers[i],buf[connections],strlen(buf[connections]),0);
+					}
+					connections++;
 				}
 			}
 		}
