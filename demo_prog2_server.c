@@ -104,10 +104,9 @@ int main(int argc, char **argv) {
 	FD_SET(listenerSDs[1], &active_FD_set);
 
 	/* Main server loop - accept and handle requests */
-	int readers[15];
-	int numreaders = 0;
-	int connections =0;
-	int sd;
+	int readers[15]; //array to hold readers (for data sending)
+	int numreaders = 0; //count of connected readers
+	int sd; //socket descriptor
 	while (1) {
 		read_FD_set = active_FD_set;
       	if (select (FD_SETSIZE, &read_FD_set, NULL, NULL, NULL) < 0) {
@@ -119,29 +118,34 @@ int main(int argc, char **argv) {
 			if( FD_ISSET(i, &read_FD_set)) {
 				if(i == listenerSDs[0]) {
 					printf("Detected new reader.\n");
-					if ( (listenerSDs[0]=accept(*sd, (struct sockaddr *)&cad, &alen)) < 0) {
+					//accept new reader
+					if ( (sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen)) < 0) {
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					}
-					readers[numreaders] = listenerSDs[0];
+					//add reader to array of readers (for message sending later)
+					readers[numreaders] = listenerSDs[0];\
+					//increase number of readers (for array usage)
 					numreaders++;
 					exit(EXIT_FAILURE);
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
-					if ( (listenerSDs[1]=accept(*sd, (struct sockaddr *)&cad, &alen)) < 0) {
+					//accept new writer
+					if ( (sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)) < 0) {
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					}
+					//add writer to active FD set
 					FD_SET(listenerSDs[1], &active_FD_set);
 					exit(EXIT_FAILURE);
 				} else {
-					int numbytes;
-					char buf[1000]; /* buffer for data */
-					numbytes = recv(listenerSDs[1], buf, 1000);
-					if(numbytes == 0) {
+					int numbytes; //number of bytes read 
+					char buf[1000]; //buffer for data
+					numbytes = recv(listenerSDs[1], buf, 1000); //receive data from a writer
+					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(listenerSDs[1], &active_FD_set);    
 					}
-					for(int i=0; i< numreaders; i++) {
+					for(int i=0; i< numreaders; i++) { //send data to all readers
 						send(readers[i],buf,strlen(buf),0);
 					}
 				}
