@@ -69,6 +69,7 @@ void initListenerSD(int port, int *sd) {
 }
 
 int main(int argc, char **argv) {
+    int sd;
 	int listenerSDs[2]; /* socket descriptors */
 	int reader_port; /* protocol port number for readers */
 	int writer_port; /* protocol port number for writers */
@@ -136,10 +137,10 @@ int main(int argc, char **argv) {
 					exit(EXIT_FAILURE);
 				} else {
 					//TODO: Handle data from existing connection
-					char buf[1000] = {0}; /* buffer for data */
-					recv(*sd, buf[connections], 1000);
+					char buf[1000]; /* buffer for data */
+					recv(listenerSDs[1], buf, 1000);
 					for(int i=0; i< numreaders; i++) {
-						send(readers[i],buf[connections],strlen(buf[connections]),0);
+						send(readers[i],buf,strlen(buf),0);
 					}
 					connections++;
 				}
