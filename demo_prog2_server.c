@@ -106,6 +106,7 @@ int main(int argc, char **argv) {
 	/* Main server loop - accept and handle requests */
 	int readers[255]; //array to hold readers (for data sending) - up to 255
 	int numreaders = 0; //count of connected readers
+	int connections = 0;
 	while (1) {
 		read_FD_set = active_FD_set;
       	if (select (FD_SETSIZE, &read_FD_set, NULL, NULL, NULL) < 0) {
@@ -136,8 +137,8 @@ int main(int argc, char **argv) {
 					//add writer to active FD set
 					FD_SET(sd, &active_FD_set);
 				} else {
+				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
-					char buf[1000]; //buffer for data
 					numbytes = recv(sd, buf, 1000,0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(listenerSDs[1], &active_FD_set);
