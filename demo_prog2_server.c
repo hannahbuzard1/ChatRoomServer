@@ -142,11 +142,13 @@ int main(int argc, char **argv) {
 					numbytes = recv(listenerSDs[1], buf, 1000,0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(listenerSDs[1], &active_FD_set);
-					}
-					for(int i=0; i< numreaders; i++) { //send data to all readers
-					    printf("in loop\n");
-					    printf("Reading from: %d", readers[i]);
-						send(readers[i],buf,strlen(buf),0);
+					} else {
+					    printf("Number of readers: %d", numreaders);
+    					for(int i=0; i< numreaders; i++) { //send data to all readers
+    					    printf("in loop\n");
+    					    printf("Reading from: %d", readers[i]);
+    						send(readers[i],buf,strlen(buf),0);
+    					}
 					}
 				}
 			}
