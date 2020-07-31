@@ -107,6 +107,7 @@ int main(int argc, char **argv) {
 	int readers[15];
 	int numreaders = 0;
 	int connections =0;
+	int sd;
 	while (1) {
 		read_FD_set = active_FD_set;
       	if (select (FD_SETSIZE, &read_FD_set, NULL, NULL, NULL) < 0) {
@@ -117,7 +118,6 @@ int main(int argc, char **argv) {
 		for(int i = 0; i < FD_SETSIZE; i++) {
 			if( FD_ISSET(i, &read_FD_set)) {
 				if(i == listenerSDs[0]) {
-					//TODO: Accept new reader
 					printf("Detected new reader.\n");
 					if ( (listenerSDs[0]=accept(*sd, (struct sockaddr *)&cad, &alen)) < 0) {
 						fprintf(stderr, "Error: Accept failed\n");
@@ -127,7 +127,6 @@ int main(int argc, char **argv) {
 					numreaders++;
 					exit(EXIT_FAILURE);
 				} else if (i == listenerSDs[1]) {
-					//TODO: Accept new writer
 					printf("Detected new writer.\n");
 					if ( (listenerSDs[1]=accept(*sd, (struct sockaddr *)&cad, &alen)) < 0) {
 						fprintf(stderr, "Error: Accept failed\n");
@@ -136,13 +135,15 @@ int main(int argc, char **argv) {
 					FD_SET(listenerSDs[1], &active_FD_set);
 					exit(EXIT_FAILURE);
 				} else {
-					//TODO: Handle data from existing connection
+					int numbytes;
 					char buf[1000]; /* buffer for data */
-					recv(listenerSDs[1], buf, 1000);
+					numbytes = recv(listenerSDs[1], buf, 1000);
+					if(numbytes == 0) {
+					    FD_CLR(listenerSDs[1], &active_FD_set);    
+					}
 					for(int i=0; i< numreaders; i++) {
 						send(readers[i],buf,strlen(buf),0);
 					}
-					connections++;
 				}
 			}
 		}
