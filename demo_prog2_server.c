@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
 	FD_SET(listenerSDs[1], &active_FD_set);
 
 	/* Main server loop - accept and handle requests */
-	int readers[15]; //array to hold readers (for data sending)
+	int readers[255]; //array to hold readers (for data sending) - up to 255
 	int numreaders = 0; //count of connected readers
 	int sd; //socket descriptor
 	while (1) {
