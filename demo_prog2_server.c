@@ -139,11 +139,11 @@ int main(int argc, char **argv) {
 					FD_SET(listenerSDs[1], &active_FD_set);
 					exit(EXIT_FAILURE);
 				} else {
-					int numbytes; //number of bytes read 
+					int numbytes; //number of bytes read
 					char buf[1000]; //buffer for data
 					numbytes = recv(listenerSDs[1], buf, 1000); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
-					    FD_CLR(listenerSDs[1], &active_FD_set);    
+					    FD_CLR(listenerSDs[1], &active_FD_set);
 					}
 					for(int i=0; i< numreaders; i++) { //send data to all readers
 						send(readers[i],buf,strlen(buf),0);
