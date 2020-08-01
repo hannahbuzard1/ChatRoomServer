@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
 					numbytes = recv(i, buf, sizeof(buf),0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(i, &active_FD_set);
-					    printf("A writer has left");
+					    printf("A writer has left\n");
 					    sprintf(buf, "A writer has left"); 
 					    for(int j=0; j< numreaders; j++) { //send data to all readers
     						send(readers[j],buf,strlen(buf),0);
