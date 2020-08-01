@@ -127,8 +127,8 @@ int main(int argc, char **argv) {
 					readers[numreaders] = sd;
 					char buf[1000] = {0}; //buffer for data
 					sprintf(buf, "A new reader has joined.\n"); 
-					for(int i=0; i< numreaders; i++) { //send data to all readers
-    				    send(readers[i],buf,strlen(buf),0);
+					for(int j=0; j< numreaders; j++) { //send data to all readers
+    				    send(readers[j],buf,strlen(buf),0);
     				}
 					//increase number of readers (for array usage)
 					numreaders++;
@@ -145,21 +145,21 @@ int main(int argc, char **argv) {
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
 					printf("Before recv\n");
+					sd = i;
 					numbytes = recv(sd, buf, sizeof(buf),0); //receive data from a writer
 					printf("After recv\n");
 					if(numbytes == 0) { //remove writer from active FD set
-					    printf("Here 1\n");
 					    FD_CLR(sd, &active_FD_set);
 					    printf("A writer has left");
 					    sprintf(buf, "A writer has left"); 
-					    for(int i=0; i< numreaders; i++) { //send data to all readers
-    						send(readers[i],buf,strlen(buf),0);
+					    for(int j=0; j< numreaders; j++) { //send data to all readers
+    						send(readers[j],buf,strlen(buf),0);
     					}
+					} else {
+    					for(int j=0; j< numreaders; j++) { //send data to all readers
+    						send(readers[j],buf,strlen(buf),0);
+    				    }
 					}
-				    printf("Num readers: %d\n", numreaders);
-					for(int i=0; i< numreaders; i++) { //send data to all readers
-						send(readers[i],buf,strlen(buf),0);
-				    }
 				}
 			}
 		}
