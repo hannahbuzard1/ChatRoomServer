@@ -70,6 +70,7 @@ void initListenerSD(int port, int *sd) {
 
 int main(int argc, char **argv) {
     int sd;
+    int sd2;
 	int listenerSDs[2]; /* socket descriptors */
 	int reader_port; /* protocol port number for readers */
 	int writer_port; /* protocol port number for writers */
@@ -135,18 +136,17 @@ int main(int argc, char **argv) {
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
 					//accept new writer
-					if ( (sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)) < 0) {
+					if ( (sd2 = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)) < 0) {
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					}
 					//add writer to active FD set
-					FD_SET(sd, &active_FD_set);
+					FD_SET(sd2, &active_FD_set);
 				} else {
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
 					printf("Before recv\n");
-					sd = i;
-					numbytes = recv(sd, buf, sizeof(buf),0); //receive data from a writer
+					numbytes = recv(sd2, buf, sizeof(buf),0); //receive data from a writer
 					printf("After recv\n");
 					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(sd, &active_FD_set);
