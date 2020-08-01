@@ -142,6 +142,7 @@ int main(int argc, char **argv) {
 					//add writer to active FD set
 					FD_SET(sd, &active_FD_set);
 				} else {
+				    printf("Trying to send a god damn message\n");
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
 					numbytes = recv(sd, buf, sizeof(buf),0); //receive data from a writer
