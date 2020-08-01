@@ -125,11 +125,6 @@ int main(int argc, char **argv) {
 					}
 					//add reader to array of readers (for message sending later)
 					readers[numreaders] = sd;
-					char buf[1000] = {0}; //buffer for data
-					sprintf(buf, "A new reader has joined.\n"); 
-					for(int i=0; i< numreaders; i++) { //send data to all readers
-    				    send(readers[i],buf,strlen(buf),0);
-    				}
 					//increase number of readers (for array usage)
 					numreaders++;
 				} else if (i == listenerSDs[1]) {
