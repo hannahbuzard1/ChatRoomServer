@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
 				    printf("Trying to send a god damn message\n");
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
-					numbytes = recv(sd, buf, sizeof(buf),0); //receive data from a writer
+					numbytes = recv(listeners[1], buf, sizeof(buf),0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
 					    printf("Here 1\n");
 					    FD_CLR(sd, &active_FD_set);
