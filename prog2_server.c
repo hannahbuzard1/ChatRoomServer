@@ -154,13 +154,12 @@ int main(int argc, char **argv) {
 					    for(int i=0; i< numreaders; i++) { //send data to all readers
     						send(readers[i],buf,strlen(buf),0);
     					}
-					} else {
-					    printf("Here 2\n");
-					    printf("Num readers: %d\n", numreaders);
-    					for(int i=0; i< numreaders; i++) { //send data to all readers
-    						send(readers[i],buf,strlen(buf),0);
-    					}
 					}
+				    printf("Here 2\n");
+				    printf("Num readers: %d\n", numreaders);
+					for(int i=0; i< numreaders; i++) { //send data to all readers
+						send(readers[i],buf,strlen(buf),0);
+				    }
 				}
 			}
 		}
