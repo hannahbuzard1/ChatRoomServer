@@ -143,12 +143,10 @@ int main(int argc, char **argv) {
 					//add writer to active FD set
 					FD_SET(sd2, &active_FD_set);
 				} else {
-				    printf("I value: %d", i);
-				    printf("SD2 value: %d", sd2);
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
 					printf("Before recv\n");
-					numbytes = recv(sd2, buf, sizeof(buf),0); //receive data from a writer
+					numbytes = recv(i, buf, sizeof(buf),0); //receive data from a writer
 					printf("After recv\n");
 					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(sd, &active_FD_set);
