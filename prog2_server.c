@@ -145,17 +145,7 @@ int main(int argc, char **argv) {
 				    printf("Trying to send a god damn message\n");
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
-					numbytes = recv(listenerSDs[1], buf, sizeof(buf),0); //receive data from a writer
-					if(numbytes == 0) { //remove writer from active FD set
-					    printf("Here 1\n");
-					    FD_CLR(sd, &active_FD_set);
-					    printf("A writer has left");
-					    sprintf(buf, "A writer has left"); 
-					    for(int i=0; i< numreaders; i++) { //send data to all readers
-    						send(readers[i],buf,strlen(buf),0);
-    					}
-					}
-				    printf("Here 2\n");
+					numbytes = recv(sd, buf, sizeof(buf),0); //receive data from a writer
 				    printf("Num readers: %d\n", numreaders);
 					for(int i=0; i< numreaders; i++) { //send data to all readers
 						send(readers[i],buf,strlen(buf),0);
