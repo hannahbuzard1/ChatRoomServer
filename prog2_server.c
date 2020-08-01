@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
 					//add reader to array of readers (for message sending later)
 					readers[numreaders] = sd;
 					char buf[1000] = {0}; //buffer for data
-					sprintf(buf, "A new reader has joined."); 
+					sprintf(buf, "A new reader has joined.\n"); 
 					for(int i=0; i< numreaders; i++) { //send data to all readers
     				    send(readers[i],buf,strlen(buf),0);
     				}
@@ -147,6 +147,7 @@ int main(int argc, char **argv) {
 					numbytes = recv(sd, buf, 1000,0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
 					    FD_CLR(listenerSDs[1], &active_FD_set);
+					    printf("A writer has left");
 					    sprintf(buf, "A writer has left"); 
 					    for(int i=0; i< numreaders; i++) { //send data to all readers
     						send(readers[i],buf,strlen(buf),0);
