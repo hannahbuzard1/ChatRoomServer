@@ -147,6 +147,7 @@ int main(int argc, char **argv) {
 					int numbytes; //number of bytes read
 					numbytes = recv(sd, buf, sizeof(buf),0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set
+					    printf("Here 1\n");
 					    FD_CLR(sd, &active_FD_set);
 					    printf("A writer has left");
 					    sprintf(buf, "A writer has left"); 
@@ -154,6 +155,8 @@ int main(int argc, char **argv) {
     						send(readers[i],buf,strlen(buf),0);
     					}
 					} else {
+					    printf("Here 2\n");
+					    printf("Num readers: %d\n", numreaders);
     					for(int i=0; i< numreaders; i++) { //send data to all readers
     						send(readers[i],buf,strlen(buf),0);
     					}
