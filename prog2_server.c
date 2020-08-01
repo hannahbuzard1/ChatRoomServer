@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
 					numbytes = recv(i, buf, sizeof(buf),0); //receive data from a writer
 					printf("After recv\n");
 					if(numbytes == 0) { //remove writer from active FD set
-					    FD_CLR(sd, &active_FD_set);
+					    FD_CLR(i, &active_FD_set);
 					    printf("A writer has left");
 					    sprintf(buf, "A writer has left"); 
 					    for(int j=0; j< numreaders; j++) { //send data to all readers
