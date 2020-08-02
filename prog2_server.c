@@ -137,6 +137,7 @@ int main(int argc, char **argv) {
 					printf("Detected new writer.\n");
 					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen);
 					if (sd < 0) { //accept new writer
+					    printf("accept failed");
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					} else {
