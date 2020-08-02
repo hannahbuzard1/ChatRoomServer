@@ -120,26 +120,30 @@ int main(int argc, char **argv) {
 			if( FD_ISSET(i, &read_FD_set)) {
 				if(i == listenerSDs[0]) {
 					printf("Detected new reader.\n");
-					if ( (sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen)) < 0) { //accept new reader
+					sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen)
+					if (sd < 0) { //accept new reader
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
+					} else {
+    					readers[numreaders] = sd; //add reader to array of readers (for message sending later)
+    					char buf[1000] = {0}; //buffer for data
+    					sprintf(buf, "A new reader has joined.\n"); 
+    					for(int j=0; j< numreaders; j++) { //send data to all readers
+        				    send(readers[j],buf,strlen(buf),0);
+        				}
+    					numreaders++; //increase number of readers (for array usage)
 					}
-					readers[numreaders] = sd; //add reader to array of readers (for message sending later)
-					char buf[1000] = {0}; //buffer for data
-					sprintf(buf, "A new reader has joined.\n"); 
-					for(int j=0; j< numreaders; j++) { //send data to all readers
-    				    send(readers[j],buf,strlen(buf),0);
-    				}
-					numreaders++; //increase number of readers (for array usage)
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
-					if ( (sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)) < 0) { //accept new writer
+					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)
+					if (sd < 0) { //accept new writer
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
+					} else {
+    					printf("I value: %d",i);
+    					printf("Sd value: %d", sd);
+    					FD_SET(sd, &active_FD_set); //add writer to active FD set
 					}
-					printf("I value: %d",i);
-					printf("Sd value: %d", sd);
-					FD_SET(sd, &active_FD_set); //add writer to active FD set
 				} else {
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
