@@ -150,6 +150,7 @@ int main(int argc, char **argv) {
 					numbytes = recv(i, buf, sizeof(buf),0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set and notify of writer's exit
 					    FD_CLR(i, &active_FD_set);
+					    printf("I value on leaving: %d\n", i);
 					    printf("A writer has left\n");
 					    sprintf(buf, "A writer has left\n"); 
 					    for(int j=0; j< numreaders; j++) { //send data to all readers
