@@ -136,15 +136,14 @@ int main(int argc, char **argv) {
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
 					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen);
+					printf("I value: %d",i);
+    				printf("Sd value: %d", sd);
 					if (sd < 0) { //accept new writer
 					    printf("accept failed");
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
-					} else {
-    					printf("I value: %d",i);
-    					printf("Sd value: %d", sd);
-    					FD_SET(sd, &active_FD_set); //add writer to active FD set
 					}
+    				FD_SET(sd, &active_FD_set); //add writer to active FD set
 				} else {
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
