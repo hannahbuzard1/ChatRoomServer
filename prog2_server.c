@@ -137,6 +137,8 @@ int main(int argc, char **argv) {
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					}
+					printf("I value: %d",i);
+					printf("Sd value: %d", sd);
 					FD_SET(sd, &active_FD_set); //add writer to active FD set
 				} else {
 				    char buf[1000] = {0}; //buffer for data
