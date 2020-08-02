@@ -73,7 +73,6 @@ void initListenerSD(int port, int *sd) {
 
 int main(int argc, char **argv) {
     int sd;
-    int sd2;
 	int listenerSDs[2]; /* socket descriptors */
 	int reader_port; /* protocol port number for readers */
 	int writer_port; /* protocol port number for writers */
@@ -110,11 +109,9 @@ int main(int argc, char **argv) {
 	/* Main server loop - accept and handle requests */
 	int readers[255]; //array to hold readers (for data sending) - up to 255
 	int numreaders = 0; //count of connected readers
-	int returnval;
 	while (1) {
 		read_FD_set = active_FD_set;
       	if (select (FD_SETSIZE, &read_FD_set, NULL, NULL, NULL) < 0) {
-      	    printf("error\n");
 			perror ("select");
 			exit (EXIT_FAILURE);
 		}
@@ -125,27 +122,22 @@ int main(int argc, char **argv) {
 					printf("Detected new reader.\n");
 					if ( (sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen)) < 0) { //accept new reader
 						fprintf(stderr, "Error: Accept failed\n");
-						printf("error\n");
 						exit(EXIT_FAILURE);
 					}
 					readers[numreaders] = sd; //add reader to array of readers (for message sending later)
 					char buf[1000] = {0}; //buffer for data
 					sprintf(buf, "A new reader has joined.\n"); 
 					for(int j=0; j< numreaders; j++) { //send data to all readers
-    				    returnval = send(readers[j],buf,strlen(buf),0);
-    				    if(returnval == -1) {
-    				        printf("error occurred\n");
-    				    }
+    				    send(readers[j],buf,strlen(buf),0);
     				}
 					numreaders++; //increase number of readers (for array usage)
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
-					if ( (sd2 = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)) < 0) { //accept new writer
+					if ( (sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)) < 0) { //accept new writer
 						fprintf(stderr, "Error: Accept failed\n");
-						printf("error\n");
 						exit(EXIT_FAILURE);
 					}
-					FD_SET(sd2, &active_FD_set); //add writer to active FD set
+					FD_SET(i, &active_FD_set); //add writer to active FD set
 				} else {
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
@@ -155,17 +147,11 @@ int main(int argc, char **argv) {
 					    printf("A writer has left\n");
 					    sprintf(buf, "A writer has left\n"); 
 					    for(int j=0; j< numreaders; j++) { //send data to all readers
-    						returnval = send(readers[j],buf,strlen(buf),0);
-    						if(returnval == -1) {
-    				            printf("error occurred\n");
-    				        }
+    						send(readers[j],buf,strlen(buf),0);
     					}
 					} else {
     					for(int j=0; j< numreaders; j++) { //send data to all readers
-    						returnval = send(readers[j],buf,strlen(buf),0);
-    						if(returnval == -1) {
-    				            printf("error occurred\n");
-    				        }
+    						send(readers[j],buf,strlen(buf),0);
     				    }
 					}
 				}
