@@ -127,36 +127,35 @@ int main(int argc, char **argv) {
 					} else {
     					readers[numreaders] = sd; //add reader to array of readers (for message sending later)
     					char buf[1000] = {0}; //buffer for data
-    					sprintf(buf, "A new reader has joined.\n"); 
+    					sprintf(buf, "A new reader has joined.\n");
     					for(int j=0; j< numreaders; j++) { //send data to all readers
-        				    send(readers[j],buf,strlen(buf),0);
-        				}
+        				 send(readers[j],buf,strlen(buf),0);
+        			}
     					numreaders++; //increase number of readers (for array usage)
 					}
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
 					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen);
 					if (sd < 0) { //accept new writer
-					    printf("accept failed");
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					}
     				FD_SET(sd, &active_FD_set); //add writer to active FD set
 				} else {
-				    char buf[1000] = {0}; //buffer for data
+				  char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
 					numbytes = recv(i, buf, sizeof(buf),0); //receive data from a writer
 					if(numbytes == 0) { //remove writer from active FD set and notify of writer's exit
 					    FD_CLR(i, &active_FD_set);
 					    printf("A writer has left\n");
-					    sprintf(buf, "A writer has left\n"); 
+					    sprintf(buf, "A writer has left\n");
 					    for(int j=0; j< numreaders; j++) { //send data to all readers
     						send(readers[j],buf,strlen(buf),0);
     					}
 					} else {
     					for(int j=0; j< numreaders; j++) { //send data to all readers
     						send(readers[j],buf,strlen(buf),0);
-    				    }
+    				  }
 					}
 				}
 			}
