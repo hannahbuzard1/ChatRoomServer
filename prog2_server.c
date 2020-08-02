@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
     					for(int j=0; j< numreaders; j++) { //send data to all readers
         				 send(readers[j],buf,strlen(buf),0);
         			}
-    					numreaders++; //increase number of readers (for array usage)
+    				numreaders++; //increase number of readers (for array usage)
 					}
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
@@ -141,6 +141,11 @@ int main(int argc, char **argv) {
 						exit(EXIT_FAILURE);
 					}
     				FD_SET(sd, &active_FD_set); //add writer to active FD set
+    				char buf[1000] = {0}; //buffer for data
+    				sprintf(buf, "A new writer has joined.\n");
+    				for(int j=0; j< numreaders; j++) { //send data to all readers
+        				 send(readers[j],buf,strlen(buf),0);
+        			}
 				} else {
 				  char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
