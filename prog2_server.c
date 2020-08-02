@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 			if( FD_ISSET(i, &read_FD_set)) {
 				if(i == listenerSDs[0]) {
 					printf("Detected new reader.\n");
-					sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen)
+					sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen);
 					if (sd < 0) { //accept new reader
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 					}
 				} else if (i == listenerSDs[1]) {
 					printf("Detected new writer.\n");
-					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen)
+					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen);
 					if (sd < 0) { //accept new writer
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
