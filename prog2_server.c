@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
 						fprintf(stderr, "Error: Accept failed\n");
 						exit(EXIT_FAILURE);
 					}
-					FD_SET(i, &active_FD_set); //add writer to active FD set
+					FD_SET(sd, &active_FD_set); //add writer to active FD set
 				} else {
 				    char buf[1000] = {0}; //buffer for data
 					int numbytes; //number of bytes read
