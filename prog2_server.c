@@ -72,7 +72,7 @@ void initListenerSD(int port, int *sd) {
 }
 
 int main(int argc, char **argv) {
-    int sd;
+int sd;
 	int listenerSDs[2]; /* socket descriptors */
 	int reader_port; /* protocol port number for readers */
 	int writer_port; /* protocol port number for writers */
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
 		for(int i = 0; i < FD_SETSIZE; i++) {
 			if( FD_ISSET(i, &read_FD_set)) {
 				if(i == listenerSDs[0]) {
-					printf("Detected new reader.\n");
+					printf("A new reader has joined.\n");
 					sd = accept(listenerSDs[0], (struct sockaddr *)&cad, &alen);
 					if (sd < 0) { //accept new reader
 						fprintf(stderr, "Error: Accept failed\n");
@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
     				numreaders++; //increase number of readers (for array usage)
 					}
 				} else if (i == listenerSDs[1]) {
-					printf("Detected new writer.\n");
+					printf("A new writer has joined.\n");
 					sd = accept(listenerSDs[1], (struct sockaddr *)&cad, &alen);
 					if (sd < 0) { //accept new writer
 						fprintf(stderr, "Error: Accept failed\n");
