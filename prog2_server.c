@@ -72,7 +72,7 @@ void initListenerSD(int port, int *sd) {
 }
 
 int main(int argc, char **argv) {
-int sd;
+    int sd;
 	int listenerSDs[2]; /* socket descriptors */
 	int reader_port; /* protocol port number for readers */
 	int writer_port; /* protocol port number for writers */
